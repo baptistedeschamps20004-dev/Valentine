@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pour toi 💗</title>
+  <style>
+    body{
+      margin:0; height:100vh; display:flex; align-items:center; justify-content:center;
+      background: linear-gradient(180deg,#ffe6ee,#fff);
+      font-family: Arial, sans-serif;
+      overflow:hidden;
+    }
+    .wrap{ text-align:center; width:min(520px,92vw); }
+    h1{ margin:0 0 8px; color:#ff2d55; font-size:26px; }
+    p{ margin:0 0 18px; color:#ff2d55; }
+    .card{
+      background:#fff; border-radius:22px; padding:26px 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.12);
+      position:relative;
+    }
+    .q{ font-size:34px; color:#ff2d55; font-weight:800; margin:6px 0 18px;}
+    .sub{ color:#ff2d55; margin-bottom:18px; font-size:16px; }
+    .btns{ display:flex; gap:12px; justify-content:center; align-items:center; flex-wrap:wrap;}
+    button{
+      border:none; cursor:pointer; padding:14px 26px; border-radius:999px;
+      font-size:18px;
+    }
+    #yesBtn{ background:#ff2d55; color:#fff; min-width:160px; }
+    #noBtn{ background:#fff; color:#ff2d55; border:2px solid #ff2d55; min-width:120px; position:relative;}
+    .hint{ margin-top:14px; color:#ff2d55; opacity:.85; font-size:14px;}
+    .confetti{
+      position:fixed; inset:0; pointer-events:none;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>💗 Pour <span id="name">Ma chérie</span></h1>
+    <p>Lis ce petit mot… 💌</p>
+
+    <div class="card" id="card">
+      <div class="q">Veux-tu être ma Valentine ? 💝</div>
+      <div class="sub" id="sub">T’es sûre ? 🥺</div>
+
+      <div class="btns">
+        <button id="yesBtn">Oui 💕</button>
+        <button id="noBtn">Non 😳</button>
+      </div>
+
+      <div class="hint">Clique… si tu oses 😏</div>
+    </div>
+  </div>
+
+<script>
+  // ✅ Change ici le prénom
+  const PRENOM = "Laura Ma Sorcière que j’aime";
+  document.getElementById("name").textContent = PRENOM;
+
+  const sub = document.getElementById("sub");
+  const noBtn = document.getElementById("noBtn");
+  const yesBtn = document.getElementById("yesBtn");
+
+  const texts = [
+    "T'es sûre ? 🥺",
+    "Réfléchis encore… 💭",
+    "Allez… 😭",
+    "Tu vas craquer 💗",
+    "Sérieusement ? 😏",
+    "Dernière chance 😳"
+  ];
+  let i = 0;
+
+  function moveNo(){
+    sub.textContent = texts[i % texts.length];
+    i++;
+
+    // Déplace le bouton "Non" au hasard
+    const dx = Math.floor(Math.random()*240) - 120; // -120 à +120
+    const dy = Math.floor(Math.random()*120) - 60;  // -60 à +60
+    noBtn.style.transform = `translate(${dx}px, ${dy}px)`;
+
+    // Et si elle insiste trop… le bouton rapetisse 😈
+    if(i >= 5){
+      noBtn.style.opacity = "0.65";
+      noBtn.style.scale = "0.9";
+    }
+    if(i >= 7){
+      noBtn.style.opacity = "0.35";
+      noBtn.style.scale = "0.8";
+    }
+  }
+
+  noBtn.addEventListener("click", moveNo);
+  noBtn.addEventListener("mouseenter", moveNo); // encore plus troll sur PC
+
+  yesBtn.addEventListener("click", () => {
+  document.body.innerHTML = `
+    <div style="text-align:center;padding:40px">
+      <div style="font-size:44px;color:#ff2d55;font-weight:900;">
+        Je t’aime Laura ❤️
+      </div>
+      <div style="margin-top:16px;font-size:22px;color:#ff2d55;">
+        Ma sorcière que j’aime 🥰✨
+      </div>
+      <div style="margin-top:18px;font-size:18px;color:#444;">
+        — Baptiste 💕
+      </div>
+    </div>
+  `;
+});
+</script>
+</body>
+</html>
