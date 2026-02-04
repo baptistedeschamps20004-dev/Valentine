@@ -14,52 +14,65 @@
     .wrap{ text-align:center; width:min(520px,92vw); }
     h1{ margin:0 0 8px; color:#ff2d55; font-size:26px; }
     p{ margin:0 0 18px; color:#ff2d55; }
+
     .card{
       background:#fff; border-radius:22px; padding:26px 18px;
       box-shadow: 0 10px 30px rgba(0,0,0,.12);
       position:relative;
     }
-    .q{ font-size:34px; color:#ff2d55; font-weight:800; margin:6px 0 18px;}
-    .sub{ color:#ff2d55; margin-bottom:18px; font-size:16px; }
-    .btns{ display:flex; gap:12px; justify-content:center; align-items:center; flex-wrap:wrap;}
+    .q{ font-size:34px; color:#ff2d55; font-weight:800; margin:6px 0 10px;}
+    .sub{ color:#ff2d55; margin-bottom:18px; font-size:16px; min-height:22px; }
+
+    .btns{
+      position:relative;
+      display:flex; gap:12px; justify-content:center; align-items:center; flex-wrap:wrap;
+      padding-bottom:10px;
+    }
+
     button{
       border:none; cursor:pointer; padding:14px 26px; border-radius:999px;
-      font-size:18px;
+      font-size:18px; transition: transform .15s ease, opacity .15s ease;
     }
-    #yesBtn{ background:#ff2d55; color:#fff; min-width:160px; }
-    #noBtn{ background:#fff; color:#ff2d55; border:2px solid #ff2d55; min-width:120px; position:relative;}
-    .hint{ margin-top:14px; color:#ff2d55; opacity:.85; font-size:14px;}
-    .confetti{
-      position:fixed; inset:0; pointer-events:none;
+    #yesBtn{ background:#ff2d55; color:#fff; min-width:170px; }
+    #noBtn{
+      background:#fff; color:#ff2d55; border:2px solid #ff2d55; min-width:120px;
+      position:absolute;
+      right:0;
+      top:0;
+      transform: translate(0,0);
     }
+
+    .hint{ margin-top:10px; color:#ff2d55; opacity:.85; font-size:14px;}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <h1>💗 Pour <span id="name">Ma chérie</span></h1>
-    <p>Lis ce petit mot… 💌</p>
+    <h1>💗 Pour <span id="name">Laura</span></h1>
+    <p>Clique sur l’enveloppe… 💌</p>
 
     <div class="card" id="card">
       <div class="q">Veux-tu être ma Valentine ? 💝</div>
       <div class="sub" id="sub">T’es sûre ? 🥺</div>
 
-      <div class="btns">
+      <div class="btns" id="btnArea">
         <button id="yesBtn">Oui 💕</button>
         <button id="noBtn">Non 😳</button>
       </div>
 
-      <div class="hint">Clique… si tu oses 😏</div>
+      <div class="hint">Promis c’est pas un piège 😇</div>
     </div>
   </div>
 
 <script>
-  // ✅ Change ici le prénom
-  const PRENOM = "Laura Ma Sorcière que j’aime";
+  // ✅ Personnalisation
+  const PRENOM = "Laura";
+  const SIGNATURE = "Baptiste";
   document.getElementById("name").textContent = PRENOM;
 
   const sub = document.getElementById("sub");
   const noBtn = document.getElementById("noBtn");
   const yesBtn = document.getElementById("yesBtn");
+  const btnArea = document.getElementById("btnArea");
 
   const texts = [
     "T'es sûre ? 🥺",
@@ -69,46 +82,56 @@
     "Sérieusement ? 😏",
     "Dernière chance 😳"
   ];
+
   let i = 0;
+  let yesScale = 1;
 
   function moveNo(){
     sub.textContent = texts[i % texts.length];
     i++;
 
-    // Déplace le bouton "Non" au hasard
-    const dx = Math.floor(Math.random()*240) - 120; // -120 à +120
-    const dy = Math.floor(Math.random()*120) - 60;  // -60 à +60
+    // zone de déplacement limitée (pas partout sur l'écran)
+    const area = btnArea.getBoundingClientRect();
+    const maxX = Math.min(140, area.width/2);  // limite horizontale
+    const maxY = 40;                           // limite verticale
+
+    const dx = Math.floor(Math.random()*(maxX*2+1)) - maxX; // -maxX..+maxX
+    const dy = Math.floor(Math.random()*(maxY*2+1)) - maxY; // -maxY..+maxY
     noBtn.style.transform = `translate(${dx}px, ${dy}px)`;
 
-    // Et si elle insiste trop… le bouton rapetisse 😈
-    if(i >= 5){
-      noBtn.style.opacity = "0.65";
-      noBtn.style.scale = "0.9";
+    // Oui grossit progressivement 😈
+    yesScale = Math.min(1.55, yesScale + 0.07);
+    yesBtn.style.transform = `scale(${yesScale})`;
+
+    // Si elle insiste : "Non" devient plus petit et plus transparent
+    if(i >= 6){
+      noBtn.style.opacity = "0.55";
+      noBtn.style.transform += " scale(0.95)";
     }
-    if(i >= 7){
-      noBtn.style.opacity = "0.35";
-      noBtn.style.scale = "0.8";
+    if(i >= 9){
+      noBtn.style.opacity = "0.25";
+      noBtn.style.transform += " scale(0.9)";
     }
   }
 
   noBtn.addEventListener("click", moveNo);
-  noBtn.addEventListener("mouseenter", moveNo); // encore plus troll sur PC
+  noBtn.addEventListener("mouseenter", moveNo);
 
   yesBtn.addEventListener("click", () => {
-  document.body.innerHTML = `
-    <div style="text-align:center;padding:40px">
-      <div style="font-size:44px;color:#ff2d55;font-weight:900;">
-        Je t’aime Laura ❤️
+    document.body.innerHTML = `
+      <div style="text-align:center;padding:40px">
+        <div style="font-size:40px;color:#ff2d55;font-weight:900;">
+          Je t’aime ma petite sorcière ❤️
+        </div>
+        <div style="margin-top:14px;font-size:20px;color:#ff2d55;">
+          Tu m’apportes beaucoup de bonheur 🥰✨
+        </div>
+        <div style="margin-top:18px;font-size:18px;color:#444;">
+          — ${SIGNATURE} 💕
+        </div>
       </div>
-      <div style="margin-top:16px;font-size:22px;color:#ff2d55;">
-        Ma sorcière que j’aime 🥰✨
-      </div>
-      <div style="margin-top:18px;font-size:18px;color:#444;">
-        — Baptiste 💕
-      </div>
-    </div>
-  `;
-});
+    `;
+  });
 </script>
 </body>
 </html>
